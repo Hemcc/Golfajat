@@ -1,7 +1,63 @@
 {
-  "updated_at": null,
-  "updated_at_display": "Ei vielä scrapattu",
-  "date": null,
+  "updated_at": "2026-06-09T15:58:50.692881",
+  "updated_at_display": "9.6.2026 klo 15:58",
+  "date": "2026-06-09",
   "total_slots": 0,
-  "courses": []
+  "courses": [
+    {
+      "id": "tapiola",
+      "name": "Tapiolan Golf",
+      "location": "Espoo",
+      "color": "#2D6A4F",
+      "url": "https://tapiola.nexgolf.fi/",
+      "slots": [],
+      "slot_count": 0,
+      "scraped_at": "2026-06-09T15:58:49.754846",
+      "scrape_ok": true
+    },
+    {
+      "id": "vantaa",
+      "name": "Vantaan Golf",
+      "location": "Vantaa, Sotunki",
+      "color": "#1565C0",
+      "url": "https://vantaangolf.nexgolf.fi/",
+      "slots": [],
+      "slot_count": 0,
+      "scraped_at": "2026-06-09T15:58:50.291914",
+      "scrape_ok": true
+    },
+    {
+      "id": "nurmijarvi",
+      "name": "Nurmijärven Golf",
+      "location": "Nurmijärvi",
+      "color": "#6A1B9A",
+      "url": "https://nurmijarvi.nexgolf.fi/",
+      "slots": [],
+      "slot_count": 0,
+      "scraped_at": "2026-06-09T15:58:50.424520",
+      "scrape_ok": true
+    },
+    {
+      "id": "espoo",
+      "name": "Espoon Golfseura",
+      "location": "Espoo, Bodom",
+      "color": "#558B2F",
+      "url": "https://espoogolf.nexgolf.fi/",
+      "slots": [],
+      "slot_count": 0,
+      "scraped_at": "2026-06-09T15:58:50.488795",
+      "scrape_ok": true
+    },
+    {
+      "id": "masters",
+      "name": "Helsinki Masters Golf",
+      "location": "Helsinki, Vuosaari",
+      "color": "#C8380A",
+      "url": "https://mastersgolf.nexgolf.fi/",
+      "slots": [],
+      "slot_count": 0,
+      "scraped_at": "2026-06-09T15:58:50.657535",
+      "scrape_ok": true
+    }
+  ]
 }
