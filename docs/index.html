@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golf Teeajat – Pääkaupunkiseutu</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --turf: #2D4A2D;
+    --turf-light: #3D6340;
+    --fairway: #4E7C4E;
+    --rough: #7AAE6E;
+    --sand: #E8DFC8;
+    --sky: #D4E8F0;
+    --flag: #C8380A;
+    --flag-soft: #F2956B;
+    --ink: #1A1F1A;
+    --mist: #F0F4F0;
+    --fog: #8A9E8A;
+    --white: #FAFCFA;
+    --card-border: rgba(45,74,45,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--mist);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--turf);
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  }
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 1.5rem;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+  }
+  .logo-flag {
+    width: 28px;
+    height: 28px;
+  }
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--sand);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .logo-text em {
+    color: var(--flag-soft);
+    font-style: italic;
+  }
+  .last-updated {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: rgba(232,223,200,0.55);
+    white-space: nowrap;
+  }
+  .refresh-btn {
+    background: var(--flag);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.1rem;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .refresh-btn:hover { background: #a62f08; }
+  .refresh-btn:active { transform: scale(0.97); }
+  .spin { display: inline-block; }
+  .spinning { animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* HERO STRIP */
+  .hero-strip {
+    background: linear-gradient(135deg, var(--turf-light) 0%, var(--fairway) 100%);
+    padding: 2.5rem 2rem 2rem;
+    border-bottom: 3px solid var(--rough);
+  }
+  .hero-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    color: var(--sand);
+    line-height: 1.1;
+    margin-bottom: 0.4rem;
+  }
+  .hero-title em { color: var(--flag-soft); font-style: italic; }
+  .hero-sub {
+    color: rgba(232,223,200,0.75);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* FILTERS */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 0.3rem 0.5rem 0.3rem 0.8rem;
+    backdrop-filter: blur(8px);
+  }
+  .filter-label {
+    font-size: 0.78rem;
+    color: rgba(232,223,200,0.7);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .filter-select {
+    background: transparent;
+    border: none;
+    color: var(--sand);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    padding: 0.2rem 0.4rem;
+  }
+  .filter-select option { background: var(--turf); }
+  .filter-toggle {
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(232,223,200,0.3);
+    color: var(--sand);
+    padding: 0.35rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-toggle.active {
+    background: var(--flag-soft);
+    border-color: var(--flag-soft);
+    color: var(--turf);
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .stat-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+  }
+  .stat-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--turf);
+  }
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--fog);
+    font-weight: 500;
+  }
+  .stat-divider {
+    width: 1px;
+    height: 28px;
+    background: var(--card-border);
+  }
+  .sort-control {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    color: var(--fog);
+  }
+  .sort-control select {
+    border: 1.5px solid var(--card-border);
+    background: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    color: var(--ink);
+  }
+
+  /* GRID */
+  .grid-wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem 3rem;
+  }
+
+  /* COURSE SECTION */
+  .course-section {
+    margin-bottom: 2rem;
+  }
+  .course-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--card-border);
+  }
+  .course-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .course-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    color: var(--turf);
+  }
+  .course-location {
+    font-size: 0.82rem;
+    color: var(--fog);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .course-link {
+    margin-left: auto;
+    font-size: 0.82rem;
+    color: var(--fairway);
+    text-decoration: none;
+    font-weight: 600;
+    border: 1.5px solid var(--rough);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .course-link:hover {
+    background: var(--turf);
+    color: var(--sand);
+    border-color: var(--turf);
+  }
+
+  /* SLOTS GRID */
+  .slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+  }
+  .slot-card {
+    background: white;
+    border: 1.5px solid var(--card-border);
+    border-radius: 10px;
+    padding: 1rem;
+    transition: all 0.18s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .slot-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--color-accent, var(--rough));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .slot-card:hover {
+    box-shadow: 0 6px 24px rgba(45,74,45,0.12);
+    transform: translateY(-2px);
+    border-color: var(--rough);
+  }
+  .slot-card:hover::before { opacity: 1; }
+
+  .slot-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--turf);
+    margin-bottom: 0.25rem;
+  }
+  .slot-holes {
+    font-size: 0.78rem;
+    color: var(--fog);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .slot-holes-badge {
+    background: var(--mist);
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+    font-weight: 600;
+    color: var(--turf);
+    font-size: 0.75rem;
+  }
+  .slot-price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--flag);
+    display: flex;
+    align-items: baseline;
+    gap: 0.2rem;
+  }
+  .slot-price-orig {
+    font-size: 0.78rem;
+    color: var(--fog);
+    text-decoration: line-through;
+    font-weight: 400;
+  }
+  .slot-players {
+    font-size: 0.75rem;
+    color: var(--fog);
+    margin-top: 0.4rem;
+  }
+  .slot-tag {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 0.5rem;
+  }
+  .tag-cheap { background: #EDF7ED; color: #2D6A2D; }
+  .tag-lastmin { background: #FFF3E0; color: #C8380A; }
+  .tag-morning { background: #E8F4FD; color: #1565C0; }
+  .tag-popular { background: #F3E5F5; color: #6A1B9A; }
+
+  .book-btn {
+    display: block;
+    width: 100%;
+    margin-top: 0.75rem;
+    background: var(--turf);
+    color: var(--sand);
+    border: none;
+    padding: 0.55rem;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .book-btn:hover { background: var(--turf-light); }
+
+  /* NO SLOTS */
+  .no-slots {
+    background: white;
+    border: 1.5px dashed var(--card-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--fog);
+    font-size: 0.88rem;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--fog);
+  }
+  .empty-state .big { font-size: 3rem; margin-bottom: 1rem; }
+  .empty-state p { font-size: 1rem; }
+
+  /* LOADING */
+  .loading-overlay {
+    text-align: center;
+    padding: 4rem 2rem;
+    display: none;
+  }
+  .loading-overlay.visible { display: block; }
+  .loading-balls {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .ball {
+    width: 14px;
+    height: 14px;
+    background: var(--rough);
+    border-radius: 50%;
+    animation: bounce 1.1s ease-in-out infinite;
+  }
+  .ball:nth-child(2) { animation-delay: 0.18s; background: var(--fairway); }
+  .ball:nth-child(3) { animation-delay: 0.36s; background: var(--turf); }
+  @keyframes bounce {
+    0%,80%,100% { transform: translateY(0); opacity: 0.6; }
+    40% { transform: translateY(-18px); opacity: 1; }
+  }
+  .loading-text { color: var(--fog); font-size: 0.9rem; }
+
+  /* FOOTER */
+  footer {
+    background: var(--turf);
+    color: rgba(232,223,200,0.5);
+    text-align: center;
+    font-size: 0.78rem;
+    padding: 1.5rem 2rem;
+    line-height: 1.8;
+  }
+  footer a { color: var(--flag-soft); text-decoration: none; }
+
+  /* BACKEND NOTICE */
+  .backend-notice {
+    background: linear-gradient(135deg, #FFF8E1, #FFF3E0);
+    border: 1.5px solid #FFB74D;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+    color: #5D4037;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .backend-notice .icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .backend-notice strong { display: block; margin-bottom: 0.25rem; color: #4E2700; }
+
+  @media (max-width: 640px) {
+    .stats-bar { padding: 0.75rem 1rem; gap: 1rem; }
+    .grid-wrap { padding: 0 1rem 2rem; }
+    .hero-strip { padding: 1.5rem 1rem 1.2rem; }
+    .stat-divider { display: none; }
+    .sort-control { margin-left: 0; }
+    .slots-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    header { padding: 0 1rem; }
+    .last-updated { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <svg class="logo-flag" viewBox="0 0 28 28" fill="none">
+        <rect x="2" y="24" width="3" height="2" rx="1" fill="#E8DFC8"/>
+        <rect x="3" y="4" width="1.5" height="22" fill="#E8DFC8"/>
+        <path d="M4.5 4 L18 8 L4.5 14 Z" fill="#C8380A"/>
+      </svg>
+      <span class="logo-text">Golf<em>ajat</em>.fi</span>
+    </a>
+    <span class="last-updated" id="lastUpdated">Päivitetty: –</span>
+    <button class="refresh-btn" onclick="fetchTeeimes()">
+      <span class="spin" id="refreshIcon">⟳</span> Päivitä
+    </button>
+  </div>
+</header>
+
+<div class="hero-strip">
+  <div class="hero-inner">
+    <h1 class="hero-title">Vapaat teeajat<br><em>tänään</em> – PKS</h1>
+    <p class="hero-sub">Kaikki pääkaupunkiseudun kentät yhdellä sivulla · Hinnat reaaliajassa</p>
+    <div class="filters">
+      <div class="filter-group">
+        <span class="filter-label">Päivä</span>
+        <select class="filter-select" id="filterDate" onchange="applyFilters()">
+          <option value="today">Tänään</option>
+          <option value="tomorrow">Huomenna</option>
+          <option value="week">Tällä viikolla</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Aikaväli</span>
+        <select class="filter-select" id="filterTime" onchange="applyFilters()">
+          <option value="all">Kaikki</option>
+          <option value="morning">Aamu (–10)</option>
+          <option value="midday">Päivä (10–14)</option>
+          <option value="afternoon">Ilta (14–)</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Reijät</span>
+        <select class="filter-select" id="filterHoles" onchange="applyFilters()">
+          <option value="all">Kaikki</option>
+          <option value="9">9 reikää</option>
+          <option value="18">18 reikää</option>
+        </select>
+      </div>
+      <button class="filter-toggle" id="toggleCheap" onclick="toggleFilter('cheap')">💰 Halvimmat ensin</button>
+      <button class="filter-toggle" id="toggleLastMin" onclick="toggleFilter('lastmin')">⚡ Last minute</button>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-item"><span class="stat-num" id="statSlots">0</span><span class="stat-label">vapaata aikaa</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat-item"><span class="stat-num" id="statCourses">0</span><span class="stat-label">kenttää</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat-item"><span class="stat-num" id="statMinPrice">–</span><span class="stat-label">edullisin hinta</span></div>
+  <div class="sort-control">
+    <label for="sortSelect">Järjestys:</label>
+    <select id="sortSelect" onchange="applyFilters()">
+      <option value="time">Aika</option>
+      <option value="price_asc">Hinta (halvin ensin)</option>
+      <option value="price_desc">Hinta (kallein ensin)</option>
+      <option value="course">Kenttä A–Ö</option>
+    </select>
+  </div>
+</div>
+
+<div class="grid-wrap">
+  <div class="backend-notice" id="scrapeNotice" style="display:none">
+    <span class="icon">⚠️</span>
+    <div>
+      <strong id="scrapeNoticeText">Tietoja haetaan...</strong>
+    </div>
+  </div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-balls">
+      <div class="ball"></div><div class="ball"></div><div class="ball"></div>
+    </div>
+    <p class="loading-text">Haetaan vapaita aikoja kentiltä…</p>
+  </div>
+
+  <div id="courseContainer"></div>
+  <div class="empty-state" id="emptyState" style="display:none;">
+    <div class="big">⛳</div>
+    <p>Ei vapaita teeaikoja valituilla suodattimilla.</p>
+  </div>
+</div>
+
+<footer>
+  Golfajat.fi – Kaikki pääkaupunkiseudun vapaat teeajat yhdellä silmäyksellä<br>
+  Demo-versio · Oikea data vaatii backend-integraation kenttien varausjärjestelmiin<br>
+  <a href="#">Lisää kenttä</a> · <a href="#">API-dokumentaatio</a> · <a href="#">Ota yhteyttä</a>
+</footer>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+// Lukee scraper/scrape.py:n kirjoittaman data.json-tiedoston.
+// GitHub Pages tarjoilee sen samasta reposta.
+
+async function fetchFromBackend() {
+  // Cache-busting: lisää aikaleima URL:iin jotta selain ei käytä vanhaa cachea
+  const cacheBust = Date.now();
+  const res = await fetch(`data.json?t=${cacheBust}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json = await res.json();
+
+  // Päivitä "Päivitetty"-teksti scraperin ajoajalla
+  if (json.updated_at_display) {
+    document.getElementById('lastUpdated').textContent = 'Scrapattu: ' + json.updated_at_display;
+  }
+
+  return json.courses || [];
+}
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let allData = [];
+let activeFilters = { cheap: false, lastmin: false };
+
+// ─── FETCH ───────────────────────────────────────────────────────────────────
+async function fetchTeeimes() {
+  const icon = document.getElementById('refreshIcon');
+  const overlay = document.getElementById('loadingOverlay');
+  const container = document.getElementById('courseContainer');
+
+  icon.classList.add('spinning');
+  overlay.classList.add('visible');
+  container.innerHTML = '';
+  document.getElementById('emptyState').style.display = 'none';
+
+  try {
+    allData = await fetchFromBackend();
+    document.getElementById('lastUpdated').textContent = 'Päivitetty: ' + new Date().toLocaleTimeString('fi-FI', {hour:'2-digit',minute:'2-digit'});
+    applyFilters();
+  } catch(e) {
+    const notice = document.getElementById('scrapeNotice');
+    const noticeText = document.getElementById('scrapeNoticeText');
+    notice.style.display = 'flex';
+    noticeText.innerHTML = '<strong>data.json-tiedostoa ei löydy vielä</strong> – Aja scraper ensimmäisen kerran: <code>python scraper/scrape.py</code> tai käynnistä GitHub Actions manuaalisesti.';
+    container.innerHTML = '';
+  } finally {
+    icon.classList.remove('spinning');
+    overlay.classList.remove('visible');
+  }
+}
+
+// ─── FILTERS ─────────────────────────────────────────────────────────────────
+function toggleFilter(key) {
+  activeFilters[key] = !activeFilters[key];
+  document.getElementById('toggle' + key.charAt(0).toUpperCase() + key.slice(1)).classList.toggle('active', activeFilters[key]);
+  applyFilters();
+}
+
+function applyFilters() {
+  const timeFilter = document.getElementById('filterTime').value;
+  const holesFilter = document.getElementById('filterHoles').value;
+  const sortBy = document.getElementById('sortSelect').value;
+
+  const filtered = allData.map(course => {
+    let slots = course.slots.filter(slot => {
+      const hour = parseInt(slot.time.split(':')[0]);
+
+      if (timeFilter === 'morning' && hour >= 10) return false;
+      if (timeFilter === 'midday' && (hour < 10 || hour >= 14)) return false;
+      if (timeFilter === 'afternoon' && hour < 14) return false;
+
+      if (holesFilter === '9' && slot.holes !== 9) return false;
+      if (holesFilter === '18' && slot.holes !== 18) return false;
+
+      if (activeFilters.cheap && !slot.tags.includes('cheap')) return false;
+      if (activeFilters.lastmin && !slot.tags.includes('lastmin')) return false;
+
+      return true;
+    });
+
+    if (sortBy === 'price_asc') slots.sort((a,b) => a.price - b.price);
+    else if (sortBy === 'price_desc') slots.sort((a,b) => b.price - a.price);
+    else slots.sort((a,b) => a.time.localeCompare(b.time));
+
+    return { ...course, slots };
+  });
+
+  let coursesToShow = filtered.filter(c => c.slots.length > 0);
+  if (sortBy === 'course') coursesToShow.sort((a,b) => a.name.localeCompare(b.name, 'fi'));
+
+  const totalSlots = coursesToShow.reduce((s,c) => s + c.slots.length, 0);
+  const allPrices = coursesToShow.flatMap(c => c.slots.map(s => s.price));
+  const minPrice = allPrices.length ? Math.min(...allPrices) : null;
+
+  document.getElementById('statSlots').textContent = totalSlots;
+  document.getElementById('statCourses').textContent = coursesToShow.length;
+  document.getElementById('statMinPrice').textContent = minPrice ? minPrice + ' €' : '–';
+
+  renderCourses(coursesToShow);
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function renderCourses(courses) {
+  const container = document.getElementById('courseContainer');
+  const emptyState = document.getElementById('emptyState');
+
+  if (courses.length === 0) {
+    container.innerHTML = '';
+    emptyState.style.display = 'block';
+    return;
+  }
+  emptyState.style.display = 'none';
+
+  container.innerHTML = courses.map(course => `
+    <div class="course-section">
+      <div class="course-header">
+        <div class="course-dot" style="background:${course.color}"></div>
+        <span class="course-name">${course.name}</span>
+        <span class="course-location">📍 ${course.location}</span>
+        <a class="course-link" href="${course.url}" target="_blank">Varaa →</a>
+      </div>
+      <div class="slots-grid">
+        ${course.slots.map(slot => renderSlot(slot, course)).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderSlot(slot, course) {
+  const tagLabels = { cheap: ['tag-cheap','💰 Edullinen'], lastmin: ['tag-lastmin','⚡ Last min'], morning: ['tag-morning','🌅 Aamu'], popular: ['tag-popular','🔥 Suosittu'] };
+  const tagsHtml = slot.tags.map(t => tagLabels[t] ? `<span class="slot-tag ${tagLabels[t][0]}">${tagLabels[t][1]}</span>` : '').join(' ');
+  const origHtml = slot.originalPrice ? `<span class="slot-price-orig">${slot.originalPrice} €</span>` : '';
+
+  return `
+    <div class="slot-card" style="--color-accent:${course.color}">
+      <div class="slot-time">${slot.time}</div>
+      <div class="slot-holes">
+        <span class="slot-holes-badge">${slot.holes} reikää</span>
+        ${slot.players}
+      </div>
+      <div class="slot-price">${slot.price} € ${origHtml}</div>
+      ${tagsHtml}
+      <button class="book-btn" onclick="window.open('${course.url}','_blank')">Varaa aika</button>
+    </div>
+  `;
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+fetchTeeimes();
+</script>
+</body>
+</html>
