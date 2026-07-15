@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-07-15T17:48:55.481821",
-  "updated_at_display": "15.7.2026 klo 17:48",
+  "updated_at": "2026-07-15T19:26:04.665682",
+  "updated_at_display": "15.7.2026 klo 19:26",
   "date": "2026-07-15",
   "total_slots": 0,
   "courses": [
@@ -12,7 +12,7 @@
       "url": "https://tapiola.nexgolf.fi/",
       "slots": [],
       "slot_count": 0,
-      "scraped_at": "2026-07-15T17:48:55.038548",
+      "scraped_at": "2026-07-15T19:26:04.228864",
       "scrape_ok": true
     },
     {
@@ -23,7 +23,7 @@
       "url": "https://vantaangolf.nexgolf.fi/",
       "slots": [],
       "slot_count": 0,
-      "scraped_at": "2026-07-15T17:48:55.122506",
+      "scraped_at": "2026-07-15T19:26:04.315216",
       "scrape_ok": true
     },
     {
@@ -34,7 +34,7 @@
       "url": "https://nurmijarvi.nexgolf.fi/",
       "slots": [],
       "slot_count": 0,
-      "scraped_at": "2026-07-15T17:48:55.268779",
+      "scraped_at": "2026-07-15T19:26:04.414249",
       "scrape_ok": true
     },
     {
@@ -45,7 +45,7 @@
       "url": "https://espoogolf.nexgolf.fi/",
       "slots": [],
       "slot_count": 0,
-      "scraped_at": "2026-07-15T17:48:55.349504",
+      "scraped_at": "2026-07-15T19:26:04.485280",
       "scrape_ok": true
     },
     {
@@ -56,7 +56,7 @@
       "url": "https://mastersgolf.nexgolf.fi/",
       "slots": [],
       "slot_count": 0,
-      "scraped_at": "2026-07-15T17:48:55.447260",
+      "scraped_at": "2026-07-15T19:26:04.628729",
       "scrape_ok": true
     }
   ]
